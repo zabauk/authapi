@@ -106,4 +106,27 @@ router.delete('/delete', Auth, async(req, res)=>{
     }
 })
 
+//check user login 
+router.post('/tokenIsValid', async(req, res)=>{
+    try{
+        const token=req.header('Authorization')
+        if(!token){
+            return res.json(false)
+        }
+        //verify token
+        const verifytoken=jwt.verify(token, process.env.AUTH_SECRET_TOKEN)
+        if(!verifytoken){
+            return res.json(false)
+        }
+        const user=User.findById(verifytoken.id)
+        if(!user){
+            return res.json(false)
+        }
+        res.json(true)
+
+    }catch(err){
+        res.status(500).json({msg: err.message})
+    }
+})
+
 module.exports=router
