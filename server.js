@@ -1,10 +1,14 @@
 require('dotenv').config()
 const express=require('express')
 const mongoose=require('mongoose')
+const User=require('./routes/userRouter')
 
 const app=express()
 //use json middleware
 app.use(express.json())
+
+//use router middleware
+app.use('/api', User)
 
 app.get('/', (req, res)=>{
     res.send('Server running')
