@@ -7,6 +7,9 @@ const app=express()
 //use json middleware
 app.use(express.json())
 
+//set uploads folder static
+app.use('/uploads', express.static('uploads'))
+
 //use router middleware
 app.use('/api', User)
 

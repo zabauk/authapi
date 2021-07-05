@@ -1,11 +1,40 @@
 const router=require('express').Router()
 const bcrypt=require('bcryptjs')
 const jwt=require('jsonwebtoken')
+const multer=require('multer')
 const User=require('../models/Usermodel')
 const Auth=require('../middlewares/auth')
 
+
+//storage for file
+const storage=multer.diskStorage({
+    destination:function(req, file, cb){
+        cb(null, './uploads')
+    },
+    filename:function(req, file, cb){
+        cb(null, new Date().toISOString()+file.originalname)
+    }
+})
+
+//file filter
+const fileFilter=(req, file, cb)=>{
+    if(file.mimetype==='image/jpeg' || file.mimetype==='image/png' || file.mimetype==='image/jpg'){
+        cb(null, true)
+    }else{
+        cb(null, false)
+    }
+}
+
+const upload=multer({
+    storage:storage,
+    limits:{
+        fileSize:1024*1024*5
+    },
+    fileFilter:fileFilter
+})
+
 //register router
-router.post('/register', async(req, res)=>{
+router.post('/register', upload.single('avatar'), async(req, res)=>{
     try{
         const {email, password, passwordcheck, firstname, lastname}=req.body
 
@@ -48,7 +77,8 @@ router.post('/register', async(req, res)=>{
             email: email,
             password: passwordHash,
             firstname: firstname,
-            lastname: lastname
+            lastname: lastname,
+            avatar:req.file.path
         })
 
         const savedUser=await newUser.save()
@@ -124,6 +154,16 @@ router.post('/tokenIsValid', async(req, res)=>{
         }
         res.json(true)
 
+    }catch(err){
+        res.status(500).json({msg: err.message})
+    }
+})
+
+//get users
+router.get('/users', async(req, res)=>{
+    try{
+        const users=await User.find().select("firstname lastname email avatar")
+        return res.json(users)
     }catch(err){
         res.status(500).json({msg: err.message})
     }
