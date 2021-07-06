@@ -2,7 +2,7 @@ require('dotenv').config()
 const express=require('express')
 const mongoose=require('mongoose')
 const User=require('./routes/userRouter')
-
+const PostRouter=require('./routes/PostRouter')
 const app=express()
 //use json middleware
 app.use(express.json())
@@ -13,6 +13,10 @@ app.use('/uploads', express.static('uploads'))
 //use router middleware
 app.use('/api', User)
 
+//use post router middleware
+app.use('/api', PostRouter)
+
+//get home page
 app.get('/', (req, res)=>{
     res.send('Server running')
 })
