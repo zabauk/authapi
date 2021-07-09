@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express=require('express')
 const mongoose=require('mongoose')
+const cookieParser=require('cookie-parser')
 const cors=require('cors')
 const User=require('./routes/userRouter')
 const PostRouter=require('./routes/PostRouter')
@@ -10,6 +11,9 @@ app.use(express.json())
 
 //use cors
 app.use(cors())
+
+//usecookie parser
+app.use(cookieParser())
 
 //set uploads folder static
 app.use('/uploads', express.static('uploads'))

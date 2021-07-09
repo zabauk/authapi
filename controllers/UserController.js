@@ -91,6 +91,10 @@ exports.login=async(req, res)=>{
 
         //create json web token
         const token=jwt.sign({id:user._id}, process.env.AUTH_SECRET_TOKEN)
+        res.cookie('token', token, {
+            httpOnly:true,
+            maxAge:24*60*60*1000
+        })
         res.json({
             token,
             user:{
