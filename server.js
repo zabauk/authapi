@@ -9,11 +9,14 @@ const app=express()
 //use json middleware
 app.use(express.json())
 
-//use cors
-app.use(cors())
+
 
 //usecookie parser
 app.use(cookieParser())
+
+//use cors
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+
 
 //set uploads folder static
 app.use('/uploads', express.static('uploads'))
@@ -24,11 +27,12 @@ app.use('/api', User)
 //use post router middleware
 app.use('/api', PostRouter)
 
+
+
 //get home page
 app.get('/', (req, res)=>{
-    res.send('Server running')
+    res.cookie('user', '1236').send('cookie set');
 })
-
 //make database connection
 mongoose.connect(process.env.DB_LINK, {
     useNewUrlParser:true, useUnifiedTopology:true
