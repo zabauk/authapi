@@ -33,3 +33,12 @@ exports.create=async(req, res)=>{
         res.json(err.message)
     }
 }
+    //delete post
+    exports.delpost=async(req, res)=>{
+        try{
+           const deletePost=await Post.findByIdAndDelete({'_id':req.params.id})
+           res.json(deletePost)
+        }catch(err){
+            res.json(err.message)
+        }
+}
